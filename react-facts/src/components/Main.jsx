@@ -1,7 +1,7 @@
 function Main() {
     return (
         <main className="container">
-            <h2></h2>
+            <h2>Main Section</h2>
             <ul>
                 <li></li>
                 <li></li>
