@@ -1,0 +1,26 @@
+.container {
+  padding: 60px 30px;
+  background-image: url(https://img.icons8.com/?size=100&id=58811&format=png&color=737373);
+  background-repeat: no-repeat;
+  background-position: right 70%;
+  background-size: contain;
+}
+
+.container h1 {
+  font-size: 2.5rem;
+  margin: 0;
+}
+
+.container ul {
+  margin-left: 1rem;
+  max-width: 250rem;
+}
+
+li {
+  margin-block: 0.5rem;
+}
+
+li::marker {
+  color: #61daf8;
+  width: 8px;
+}

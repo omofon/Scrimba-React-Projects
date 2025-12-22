@@ -1,3 +1,5 @@
+import './styles/Main.css'
+
 function Main() {
     return (
       <main className="container">
