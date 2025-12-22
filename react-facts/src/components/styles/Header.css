@@ -11,6 +11,7 @@
   width: 40px;
   height: 40px;
   display: block;
+  margin-right: calc(1rem * 0.875);
 }
 
 .header span {
