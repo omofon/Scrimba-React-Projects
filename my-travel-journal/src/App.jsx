@@ -10,12 +10,7 @@ export default function App() {
       <main className="px-20">
         {travelData.map((item) => {
           console.log("Testing rendering", item.id, item.title);
-          return (
-            <TravelCard
-              key={item.id}
-              entry={item}
-            />
-          );
+          return <TravelCard key={item.id} entry={item} />;
         })}
       </main>
     </>
