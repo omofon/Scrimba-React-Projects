@@ -13,12 +13,7 @@ export default function App() {
           return (
             <TravelCard
               key={item.id}
-              img={item.img}
-              title={item.title}
-              country={item.country}
-              googleMapsLink={item.googleMapsLink}
-              dates={item.dates}
-              text={item.text}
+              entry={item}
             />
           );
         })}
