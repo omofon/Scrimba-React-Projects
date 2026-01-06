@@ -1,5 +1,11 @@
+import { useState } from "react";
+
 function Main() {
-  const ingredients = ["Chicken", "Oregano", "Tomatoes"];
+  const [ingredients, setIngredients] = useState([
+    "Chicken",
+    "Oregano",
+    "Tomatoes",
+  ]);
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -8,8 +14,7 @@ function Main() {
     const formData = new FormData(event.currentTarget);
     const newIngredient = formData.get("ingredient");
 
-    ingredients.push(newIngredient);
-    console.log("New ingredient", ingredients[ingredients.length - 1]);
+    setIngredients((prevIngredients) => [...prevIngredients, newIngredient]);
   }
 
   return (
