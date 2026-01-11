@@ -13,8 +13,13 @@ function Main() {
     setIngredients([]);
   }
 
+  const ingredientsListItems = ingredients.map((item) => (
+    <li key={item}>{item}</li>
+  ));
+
   return (
     <main className="px-4 py-5 space-y-5">
+      {/* Ingredient Form */}
       <form action={handleSubmit} className="flex justify-center gap-5">
         <input
           type="text"
@@ -27,11 +32,31 @@ function Main() {
           + Add ingredient
         </button>
       </form>
-      <ul className="ml-10 list-decimal">
-        {ingredients.map((item) => (
-          <li key={item}>{item}</li>
-        ))}
-      </ul>
+
+      {/* Ingredient Section */}
+      {ingredients.length > 0 && (
+        <section>
+          <h2 className="text-xl font-bold mb-2">Ingredients on hand:</h2>
+          <ul className="ml-10 list-disc" aria-live="polite">
+            {ingredientsListItems}
+          </ul>
+          <div className="flex justify-between items-center rounded-lg bg-[#F0EFEB] py-2.5 px-7">
+            <div>
+              <h3 className="text-lg font-medium leading-6">
+                Ready for a recipe?
+              </h3>
+              <p className="text-[#6B7290] text-sm leading-5">
+                Generate a recipe from your list of ingredients.
+              </p>
+            </div>
+            <button className="rounded-md bg-[#D17557] shadow text-[#FAFAF8] px-4 py-2 text-sm cursor-pointer">
+              Get a recipe
+            </button>
+          </div>
+        </section>
+      )}
+
+      {/* Clear Ingredients */}
       <button
         onClick={clearList}
         className="px-5 py-1 rounded-xl bg-[#141413] text-[#FAFAF8] cursor-pointer hover:bg-gray-700"
