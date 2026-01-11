@@ -1,25 +1,21 @@
 import { useState } from "react";
 
 function Main() {
-  const [ingredients, setIngredients] = useState([
-    "Chicken",
-    "Oregano",
-    "Tomatoes",
-  ]);
+  const [ingredients, setIngredients] = useState([]);
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    console.log("Form submitted!");
-
-    const formData = new FormData(event.currentTarget);
+  function handleSubmit(formData) {
     const newIngredient = formData.get("ingredient");
 
     setIngredients((prevIngredients) => [...prevIngredients, newIngredient]);
   }
 
+  function clearList() {
+    setIngredients([]);
+  }
+
   return (
     <main className="px-4 py-5 space-y-5">
-      <form onSubmit={handleSubmit} className="flex justify-center gap-5">
+      <form action={handleSubmit} className="flex justify-center gap-5">
         <input
           type="text"
           aria-label="Add ingredient"
@@ -36,6 +32,12 @@ function Main() {
           <li key={item}>{item}</li>
         ))}
       </ul>
+      <button
+        onClick={clearList}
+        className="px-5 py-1 rounded-xl bg-[#141413] text-[#FAFAF8] cursor-pointer hover:bg-gray-700"
+      >
+        Clear
+      </button>
     </main>
   );
 }
