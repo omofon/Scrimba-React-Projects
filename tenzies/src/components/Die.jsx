@@ -1,7 +1,7 @@
-export default function Die({ value, isHeld }) {
+export default function Die({ value, isHeld, hold }) {
   const styles = { backgroundColor: isHeld ? "#59E391" : "white" };
   return (
-    <button className="die-button" style={styles}>
+    <button className="die-button" style={styles} onClick={hold}>
       {value}
     </button>
   );
