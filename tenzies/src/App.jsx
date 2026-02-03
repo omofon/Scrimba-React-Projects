@@ -15,6 +15,7 @@ function App() {
     }));
   }
 
+  // Changes die value only when isHeld is false
   function rollDice() {
     setDice((oldDice) =>
       oldDice.map((die) =>
