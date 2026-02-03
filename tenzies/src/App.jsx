@@ -3,10 +3,10 @@ import Die from "./components/Die";
 import { nanoid } from "nanoid";
 
 function App() {
-    // Dice is an array of objects
+  // Dice is an array of objects
   const [dice, setDice] = useState(generateAllNewDice());
 
-//   Creates a new array with 10 values and assings an object to them
+  //   Creates a new array with 10 values and assings an object to them
   function generateAllNewDice() {
     return new Array(10).fill(0).map(() => ({
       id: nanoid(),
@@ -16,7 +16,11 @@ function App() {
   }
 
   function rollDice() {
-    setDice(generateAllNewDice());
+    setDice((oldDice) =>
+      oldDice.map((die) =>
+        die.isHeld ? die : { ...die, value: Math.ceil(Math.random() * 6) },
+      ),
+    );
   }
 
   // maps to object in array with same id value
