@@ -6,6 +6,11 @@ function App() {
   // Dice is an array of objects
   const [dice, setDice] = useState(generateAllNewDice());
 
+  // Game is won if all dice are held and have the same value
+  const gameWon = dice.every(
+    (die) => die.isHeld && die.value === dice[0].value,
+  );
+
   //   Creates a new array with 10 values and assings an object to them
   function generateAllNewDice() {
     return new Array(10).fill(0).map(() => ({
@@ -53,7 +58,7 @@ function App() {
       </section>
       <div className="dice-container">{diceElements}</div>
       <button onClick={rollDice} className="roll-dice">
-        Roll
+        {gameWon ? "New Game" : "Roll"}
       </button>
     </main>
   );

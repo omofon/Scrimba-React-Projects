@@ -80,8 +80,10 @@ button {
 }
 
 .roll-dice {
-  width: 92px;
-  height: 36px;
+  /* width: 92px;
+  height: 36px; */
+  padding-inline: 1.25rem;
+  padding-block: 0.75rem;
   text-align: center;
   color: white;
   background: #5035ff;
