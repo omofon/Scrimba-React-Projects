@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Die from "./components/Die";
 import { nanoid } from "nanoid";
+import Confetti from "react-confetti";
 
 function App() {
   // Dice is an array of objects
@@ -49,6 +50,7 @@ function App() {
   ));
   return (
     <main>
+      {gameWon && <Confetti />}
       <section className="tenzies-section">
         <h1>Tenzies</h1>
         <p>
