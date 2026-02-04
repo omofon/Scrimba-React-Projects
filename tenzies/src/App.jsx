@@ -21,6 +21,10 @@ function App() {
     (die) => die.isHeld && die.value === dice[0].value,
   );
 
+  function newGame() {
+    setDice(generateAllNewDice());
+  }
+
   // Changes die value only when isHeld is false
   function rollDice() {
     setDice((oldDice) =>
@@ -59,7 +63,7 @@ function App() {
         </p>
       </section>
       <div className="dice-container">{diceElements}</div>
-      <button onClick={rollDice} className="roll-dice">
+      <button onClick={gameWon ? newGame : rollDice} className="roll-dice">
         {gameWon ? "New Game" : "Roll"}
       </button>
     </main>
