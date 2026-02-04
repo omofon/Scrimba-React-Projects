@@ -4,6 +4,22 @@ import { nanoid } from "nanoid";
 import Confetti from "react-confetti";
 
 function App() {
+  // state and ref for timers
+  const [elapsedTime, setElapsedTime] = useState(0);
+
+  const startTimeRef = useRef(null);
+  const intervalRef = useRef(null);
+  const seconds = (elapsedTime / 1000).toFixed(2);
+
+  // start timer immedaitely fn is ran
+  function startTimer() {
+    startTimeRef.current = performance.now();
+
+    intervalRef.current = setInterval(() => {
+      setElapsedTime(performance.now() - startTimeRef.current);
+    }, 50);
+  }
+
   //   Creates a new array with 10 values and assings an object to them
   function generateAllNewDice() {
     return new Array(10).fill(0).map(() => ({
@@ -23,14 +39,33 @@ function App() {
     (die) => die.isHeld && die.value === dice[0].value,
   );
 
+  // focuses the "new game" button when gameWon is true
   useEffect(() => {
     if (gameWon) {
       buttonRef.current.focus();
     }
   }, [gameWon]);
 
+  // if game is won stop the timer
+  useEffect(() => {
+    if (gameWon) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  }, [gameWon]);
+
+  // starts the timer on first render
+  useEffect(() => {
+    startTimer();
+
+    return () => clearInterval(intervalRef.current);
+  }, []);
+
   function newGame() {
+    clearInterval(intervalRef.current);
+    setElapsedTime(0);
     setDice(generateAllNewDice());
+    startTimer();
   }
 
   // Changes die value only when isHeld is false
@@ -75,6 +110,9 @@ function App() {
           current value between rolls.
         </p>
       </section>
+      <div className="timer">
+        <p>Time: {seconds}s</p>
+      </div>
       <div className="dice-container">{diceElements}</div>
       <button
         ref={buttonRef}
