@@ -127,7 +127,7 @@ function App() {
     <main>
       {gameWon && <Confetti />}
 
-      <section className="tenzies-section">
+      <section className="tenzies-title">
         <h1>Tenzies</h1>
         <p>
           Roll until all dice are the same. Click each die to freeze it at its
@@ -136,8 +136,14 @@ function App() {
       </section>
 
       <div className="timer">
-        <p>Time: {seconds}s</p>
-        {bestSeconds && <p>Fastest Lap: {bestSeconds}s</p>}
+        <p>
+          <span>Time:</span> {seconds}s
+        </p>
+        {bestSeconds && (
+          <p>
+            <span>Fastest Lap:</span> {bestSeconds}s
+          </p>
+        )}
       </div>
 
       <div className="dice-container">{diceElements}</div>
