@@ -4,15 +4,28 @@ import { nanoid } from "nanoid";
 import Confetti from "react-confetti";
 
 function App() {
-  // state and ref for timers
+  // =======================
+  // TIMER STATE
+  // =======================
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [gameStarted, setGameStarted] = useState(false);
+  const [bestTime, setBestTime] = useState(() => {
+    const saved = localStorage.getItem("bestTime");
+    return saved ? Number(saved) : null;
+  });
 
   const startTimeRef = useRef(null);
   const intervalRef = useRef(null);
-  const seconds = (elapsedTime / 1000).toFixed(2);
 
-  // start timer immedaitely fn is ran
+  const seconds = (elapsedTime / 1000).toFixed(2);
+  const bestSeconds = bestTime ? (bestTime / 1000).toFixed(2) : null;
+
+  // =======================
+  // TIMER FUNCTIONS
+  // =======================
   function startTimer() {
+    if (intervalRef.current) return;
+
     startTimeRef.current = performance.now();
 
     intervalRef.current = setInterval(() => {
@@ -20,7 +33,19 @@ function App() {
     }, 50);
   }
 
-  //   Creates a new array with 10 values and assings an object to them
+  function ensureGameStarted() {
+    setGameStarted((prev) => {
+      if (!prev) {
+        startTimer();
+        return true;
+      }
+      return prev;
+    });
+  }
+
+  // =======================
+  // GAME LOGIC
+  // =======================
   function generateAllNewDice() {
     return new Array(10).fill(0).map(() => ({
       id: nanoid(),
@@ -29,47 +54,38 @@ function App() {
     }));
   }
 
-  // Dice is an array of objects
   const [dice, setDice] = useState(() => generateAllNewDice());
-
   const buttonRef = useRef(null);
 
-  // Game is won if all dice are held and have the same value
   const gameWon = dice.every(
     (die) => die.isHeld && die.value === dice[0].value,
   );
 
-  // focuses the "new game" button when gameWon is true
-  useEffect(() => {
-    if (gameWon) {
-      buttonRef.current.focus();
-    }
-  }, [gameWon]);
-
-  // if game is won stop the timer
+  // =======================
+  // EFFECTS
+  // =======================
   useEffect(() => {
     if (gameWon) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
+
+      setBestTime((prev) => {
+        if (prev === null || elapsedTime < prev) {
+          localStorage.setItem("bestTime", elapsedTime);
+          return elapsedTime;
+        }
+        return prev;
+      });
+
+      buttonRef.current.focus();
     }
-  }, [gameWon]);
+  }, [gameWon, elapsedTime]);
 
-  // starts the timer on first render
-  useEffect(() => {
-    startTimer();
-
-    return () => clearInterval(intervalRef.current);
-  }, []);
-
-  function newGame() {
-    clearInterval(intervalRef.current);
-    setElapsedTime(0);
-    setDice(generateAllNewDice());
-    startTimer();
-  }
-
-  // Changes die value only when isHeld is false
+  // =======================
+  // ACTIONS
+  // =======================
   function rollDice() {
+    ensureGameStarted();
     setDice((oldDice) =>
       oldDice.map((die) =>
         die.isHeld ? die : { ...die, value: Math.ceil(Math.random() * 6) },
@@ -77,8 +93,8 @@ function App() {
     );
   }
 
-  // maps to object in array with same id value
   function hold(id) {
+    ensureGameStarted();
     setDice((oldDice) =>
       oldDice.map((die) =>
         die.id === id ? { ...die, isHeld: !die.isHeld } : die,
@@ -86,23 +102,31 @@ function App() {
     );
   }
 
-  const diceElements = dice.map((dieObj) => (
+  function newGame() {
+    clearInterval(intervalRef.current);
+    intervalRef.current = null;
+
+    setElapsedTime(0);
+    setGameStarted(false);
+    setDice(generateAllNewDice());
+  }
+
+  // =======================
+  // RENDER
+  // =======================
+  const diceElements = dice.map((die) => (
     <Die
-      key={dieObj.id}
-      value={dieObj.value}
-      isHeld={dieObj.isHeld}
-      // hold carries a callback fn with id so child components don't have to
-      hold={() => hold(dieObj.id)}
+      key={die.id}
+      value={die.value}
+      isHeld={die.isHeld}
+      hold={() => hold(die.id)}
     />
   ));
+
   return (
     <main>
       {gameWon && <Confetti />}
-      <div aria-live="polite" className="sr-only">
-        {gameWon && (
-          <p>Congratulations! You won! Press "New Game" to start again.</p>
-        )}
-      </div>
+
       <section className="tenzies-section">
         <h1>Tenzies</h1>
         <p>
@@ -110,10 +134,14 @@ function App() {
           current value between rolls.
         </p>
       </section>
+
       <div className="timer">
         <p>Time: {seconds}s</p>
+        {bestSeconds && <p>Fastest Lap: {bestSeconds}s</p>}
       </div>
+
       <div className="dice-container">{diceElements}</div>
+
       <button
         ref={buttonRef}
         onClick={gameWon ? newGame : rollDice}
